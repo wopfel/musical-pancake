@@ -55,6 +55,14 @@ Transfer data to the server (index.php):
 ... curl prints the transmitted list back to stdout.
 
 
+## Client scenario
+
+    hostname | curl  -d @-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/register.php"
+    curl  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/ping.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
+
+Store the GUID returned from the register.php call and supply it to the ping.php call.
+
+
 ## Hints ##
 
 If you get an "Input file not specified" answer from curl, maybe the directory is not specified in the open_basedir option. As soon as I added the directory to the open_basedir option in the /etc/php/php.ini and restarted nginx and php-fpm services, it worked :-)
@@ -64,8 +72,8 @@ If you get an "Input file not specified" answer from curl, maybe the directory i
 
 I'd like to store the data in a MariaDB/MySQL database.
 
-My steps in phpMyAdmin:
+My steps in phpMyAdmin (see file database/db-dump.sql):
 - create a database ("musical-pancake", collation utf8-bin)
-- create a table ("systems", 4 rows)
+- create a table ("systems")
 - create a user ("musical-pancake", password "aEfV7I5n0tJfgCZ0")
 
