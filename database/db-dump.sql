@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 14. Jan 2017 um 10:41
+-- Erstellungszeit: 14. Jan 2017 um 16:24
 -- Server-Version: 10.1.20-MariaDB
 -- PHP-Version: 7.0.14
 
@@ -25,7 +25,8 @@ CREATE TABLE `systems` (
   `guid` char(36) COLLATE utf8_bin NOT NULL,
   `dn` varchar(150) COLLATE utf8_bin NOT NULL,
   `servername` varchar(50) COLLATE utf8_bin NOT NULL,
-  `created` datetime NOT NULL
+  `created` datetime NOT NULL,
+  `last_contact` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -46,4 +47,4 @@ ALTER TABLE `systems`
 -- AUTO_INCREMENT für Tabelle `systems`
 --
 ALTER TABLE `systems`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
