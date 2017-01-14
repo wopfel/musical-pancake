@@ -59,3 +59,13 @@ Transfer data to the server (index.php):
 
 If you get an "Input file not specified" answer from curl, maybe the directory is not specified in the open_basedir option. As soon as I added the directory to the open_basedir option in the /etc/php/php.ini and restarted nginx and php-fpm services, it worked :-)
 
+
+## Database
+
+I'd like to store the data in a MariaDB/MySQL database.
+
+My steps in phpMyAdmin:
+- create a database ("musical-pancake", collation utf8-bin)
+- create a table ("systems", 4 rows)
+- create a user ("musical-pancake", password "aEfV7I5n0tJfgCZ0")
+
