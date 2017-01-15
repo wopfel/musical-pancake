@@ -59,8 +59,9 @@ Transfer data to the server (index.php):
 
     hostname | curl  -d @-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/register.php"
     curl  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/ping.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
+    pacman -Q | curl  -F inputfile=@-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://pinguin.lan:33443/transmit.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
 
-Store the GUID returned from the register.php call and supply it to the ping.php call.
+Store the GUID returned from the register.php call and supply it to the ping.php and transmit.php call.
 
 
 ## Hints ##
@@ -76,4 +77,12 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - create a database ("musical-pancake", collation utf8-bin)
 - create a table ("systems")
 - create a user ("musical-pancake", password "aEfV7I5n0tJfgCZ0")
+- create a table ("installed_packages") for storing pacman information
+
+
+## TODO
+
+- Remove datetime from every row in installed_packages
+- Delete old rows from installed_packages before storing new data (transmit.php)
+- Return JSON formatted status back to the client
 
