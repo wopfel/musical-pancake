@@ -1,18 +1,48 @@
-server {
-    listen        33443;
-    ssl           on;
-    server_name   example.com;
+user http;
+worker_processes auto;
+worker_cpu_affinity auto;
+pcre_jit on;
+error_log  /var/log/nginx/error.log  info;
 
-    ssl_certificate        /etc/nginx/certs/server.crt;
-    ssl_certificate_key    /etc/nginx/certs/server.key;
-    ssl_client_certificate /etc/nginx/certs/ca.crt;
-    ssl_verify_client      yes;
+events {
+    worker_connections 2048;
+}
 
-    location / {
-        root           /var/www/example.com/html;
-        fastcgi_pass   127.0.0.1:9000;
-        fastcgi_param  VERIFIED $ssl_client_verify;
-        fastcgi_param  DN $ssl_client_s_dn;
-        include        fastcgi_params;
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+    tcp_nopush on;
+    aio threads;
+    server_tokens off;
+    charset utf-8;
+    index index.php index.html index.htm;
+
+    server {
+        listen 33443;
+        ssl    on;
+    
+        ssl_certificate        /etc/nginx/certs/server.crt;
+        ssl_certificate_key    /etc/nginx/certs/server.key;
+        ssl_client_certificate /etc/nginx/certs/ca.crt;
+        ssl_verify_client      on;
+
+        server_name localhost;
+        root /usr/share/nginx/html;
+
+        location / {
+            index index.html index.htm index.php;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass unix:/run/php-fpm/php-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_param  VERIFIED $ssl_client_verify;
+            fastcgi_param  DN $ssl_client_s_dn;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include fastcgi.conf;
+        }
     }
 }
+
