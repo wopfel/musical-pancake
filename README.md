@@ -85,4 +85,6 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - Remove datetime from every row in installed_packages
 - Delete old rows from installed_packages before storing new data (transmit.php)
 - Return JSON formatted status back to the client
+- Describe how to re-new certificates (CA/server/client)
+- Add statistic pages (system with most packages, packages most installed, ...)
 
