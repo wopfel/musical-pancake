@@ -88,3 +88,9 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - Describe how to re-new certificates (CA/server/client)
 - Add statistic pages (system with most packages, packages most installed, ...)
 
+
+## LICENSE
+
+All files and/or data is released under GNU General Public License v2.0 (GPLv2)
+See LICENSE file for details
+  
