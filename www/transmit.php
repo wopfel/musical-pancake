@@ -4,6 +4,9 @@ define( "MUSICAL_PANCAKE", "musical-pancake" );
 
 require( "_tools.php" );
 
+# Check HTTP request method
+if ( $_SERVER["REQUEST_METHOD"] != "POST" ) { die( "Wrong request method!" ); }
+
 var_dump( $_GET );
 
 $guid = $_GET["guid"];
