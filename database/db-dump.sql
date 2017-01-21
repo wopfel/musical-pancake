@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 15. Jan 2017 um 10:29
+-- Erstellungszeit: 21. Jan 2017 um 23:22
 -- Server-Version: 10.1.20-MariaDB
 -- PHP-Version: 7.0.14
 
@@ -22,10 +22,22 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `installed_packages` (
   `id` bigint(20) NOT NULL,
-  `systems_id` bigint(20) NOT NULL,
-  `datetime` datetime NOT NULL,
+  `saved_data_id` bigint(20) NOT NULL,
   `package_name` varchar(100) COLLATE utf8_bin NOT NULL,
   `package_version` varchar(20) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `saved_data`
+--
+
+CREATE TABLE `saved_data` (
+  `id` bigint(20) NOT NULL,
+  `systems_id` bigint(20) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `successful` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -52,6 +64,13 @@ CREATE TABLE `systems` (
 --
 ALTER TABLE `installed_packages`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `systems_id` (`saved_data_id`);
+
+--
+-- Indizes für die Tabelle `saved_data`
+--
+ALTER TABLE `saved_data`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `systems_id` (`systems_id`);
 
 --
@@ -68,7 +87,12 @@ ALTER TABLE `systems`
 -- AUTO_INCREMENT für Tabelle `installed_packages`
 --
 ALTER TABLE `installed_packages`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1657;
+--
+-- AUTO_INCREMENT für Tabelle `saved_data`
+--
+ALTER TABLE `saved_data`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT für Tabelle `systems`
 --

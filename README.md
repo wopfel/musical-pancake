@@ -78,15 +78,33 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - create a table ("systems")
 - create a user ("musical-pancake", password "aEfV7I5n0tJfgCZ0")
 - create a table ("installed_packages") for storing pacman information
+- create a table ("saved_data") for grouping data in the installed_packages table
 
 
 ## TODO
 
-- Remove datetime from every row in installed_packages
 - Delete old rows from installed_packages before storing new data (transmit.php)
 - Return JSON formatted status back to the client
 - Describe how to re-new certificates (CA/server/client)
 - Add statistic pages (system with most packages, packages most installed, ...)
+
+
+## DATABASE LAYOUT
+
+    systems                  saved_data              installed_packages
+    -------                  ----------              ------------------
+    id          <---+        id           <---+      id
+    guid            +----    systems_id       +----  saved_data_id
+    dn                       datetime                package_name
+    servername               successful              package_version
+    created
+    last_contact
+
+In the systems table, all systems (clients) are recorded. Each registering client gets a random GUID assigned.
+
+When data is transferred (so far: pacman's installed packages) a new record is created in the saved_data table. The field successful is initialized with false. The packages are added to the installed_packages table, referencing the saved_data's id. After the insert has been completed, the field successful is set to true.
+
+At the moment, the records are added. There's no garbage collection.
 
 
 ## LICENSE

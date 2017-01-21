@@ -48,6 +48,19 @@ if ( $content === FALSE ) { die(); }
 
 print $content;
 
+# Create row
+$stmt = $pdo->prepare( "INSERT INTO saved_data (id, systems_id, datetime, successful) VALUES (?, ?, CURRENT_TIMESTAMP, FALSE)" );
+$stmt->execute( array( "", $data['id'] ) );
+
+$last_insert_id = $pdo->lastInsertId();
+
+
+$content = file_get_contents( $filename );
+
+if ( $content === FALSE ) { die(); }
+
+print $content;
+
 foreach ( explode( "\n", $content ) as $line ) {
 
     print ">>> $line \n";
@@ -56,8 +69,14 @@ foreach ( explode( "\n", $content ) as $line ) {
     $pkg_name    = $name_and_version[0];
     $pkg_version = $name_and_version[1];
 
-    $stmt = $pdo->prepare( "INSERT INTO installed_packages (id, systems_id, datetime, package_name, package_version) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)" );
-    $stmt->execute( array( "", $data['id'], $pkg_name, $pkg_version ) );
+    $stmt = $pdo->prepare( "INSERT INTO installed_packages (id, saved_data_id, package_name, package_version) VALUES (?, ?, ?, ?)" );
+    $stmt->execute( array( "", $last_insert_id, $pkg_name, $pkg_version ) );
 
 }
+
+# Update row
+$stmt = $pdo->prepare( "UPDATE saved_data SET successful = TRUE where id = ?" );
+$stmt->execute( array( $last_insert_id ) );
+
+if ( $stmt->rowCount() != 1 ) { die(); }
 
