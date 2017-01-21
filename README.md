@@ -87,6 +87,7 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - Return JSON formatted status back to the client
 - Describe how to re-new certificates (CA/server/client)
 - Add statistic pages (system with most packages, packages most installed, ...)
+- Add relationship keys/foreign keys in database (example: delete all appropriate rows when row in saved_data is deleted)
 
 
 ## DATABASE LAYOUT
