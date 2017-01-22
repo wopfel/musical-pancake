@@ -98,8 +98,11 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
     guid            +----    systems_id       +----  saved_data_id
     dn                       datetime                package_name
     servername               successful              package_version
-    created
-    last_contact
+    created                  type         ----+
+    last_contact                              !
+                                              !
+                                              +-----> references to array $data_tables_list in transmit.php:
+                                                      0 --> table installed_packages
 
 In the systems table, all systems (clients) are recorded. Each registering client gets a random GUID assigned.
 

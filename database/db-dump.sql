@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 21. Jan 2017 um 23:22
+-- Erstellungszeit: 22. Jan 2017 um 01:11
 -- Server-Version: 10.1.20-MariaDB
 -- PHP-Version: 7.0.14
 
@@ -37,7 +37,8 @@ CREATE TABLE `saved_data` (
   `id` bigint(20) NOT NULL,
   `systems_id` bigint(20) NOT NULL,
   `datetime` datetime NOT NULL,
-  `successful` tinyint(1) NOT NULL
+  `successful` tinyint(1) NOT NULL,
+  `type` mediumint(8) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -71,7 +72,8 @@ ALTER TABLE `installed_packages`
 --
 ALTER TABLE `saved_data`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `systems_id` (`systems_id`);
+  ADD KEY `systems_id` (`systems_id`),
+  ADD KEY `type` (`type`);
 
 --
 -- Indizes für die Tabelle `systems`
@@ -87,12 +89,12 @@ ALTER TABLE `systems`
 -- AUTO_INCREMENT für Tabelle `installed_packages`
 --
 ALTER TABLE `installed_packages`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1657;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3865;
 --
 -- AUTO_INCREMENT für Tabelle `saved_data`
 --
 ALTER TABLE `saved_data`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT für Tabelle `systems`
 --

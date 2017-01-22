@@ -17,6 +17,10 @@ if ( ! preg_match( "/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{1
 
 var_dump( $guid );
 
+# A list with tables (where the transmitted data is stored), references to field "type" in table "saved_data"
+# Don't change the order in this array :-)
+$data_tables_list = array( "installed_packages" );
+
 # Establish database connection
 $pdo = newDatabaseConnection()  or  die();
 
@@ -48,9 +52,12 @@ if ( $content === FALSE ) { die(); }
 
 print $content;
 
+$table_id = array_search( "installed_packages", $data_tables_list );
+if ( $table_id === FALSE ) { die( "Table not found. Invalid name." ); }
+
 # Create row
-$stmt = $pdo->prepare( "INSERT INTO saved_data (id, systems_id, datetime, successful) VALUES (?, ?, CURRENT_TIMESTAMP, FALSE)" );
-$stmt->execute( array( "", $data['id'] ) );
+$stmt = $pdo->prepare( "INSERT INTO saved_data (id, systems_id, datetime, successful, type) VALUES (?, ?, CURRENT_TIMESTAMP, FALSE, ?)" );
+$stmt->execute( array( "", $data['id'], $table_id ) );
 
 $last_insert_id = $pdo->lastInsertId();
 
