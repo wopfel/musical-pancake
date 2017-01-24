@@ -85,6 +85,7 @@ $stmt = $pdo->prepare( "INSERT INTO saved_data (id, systems_id, datetime, succes
 $stmt->execute( array( "", $data['id'], $table_id ) );
 
 $last_insert_id = $pdo->lastInsertId();
+if ( $last_insert_id <= 0 ) { die( "Error: invalid insert id found" ); }
 
 
 foreach ( explode( "\n", $content ) as $line ) {
