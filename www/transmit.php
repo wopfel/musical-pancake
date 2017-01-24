@@ -88,18 +88,27 @@ $last_insert_id = $pdo->lastInsertId();
 if ( $last_insert_id <= 0 ) { die( "Error: invalid insert id found" ); }
 
 
-foreach ( explode( "\n", $content ) as $line ) {
+if ( $type == "installed-packages" and $data_table_name == "installed_packages" ) {
 
-    print ">>> $line \n";
+    foreach ( explode( "\n", $content ) as $line ) {
 
-    $name_and_version = explode( " ", $line );
-    $pkg_name    = $name_and_version[0];
-    $pkg_version = $name_and_version[1];
+        print ">>> $line \n";
 
-    $stmt = $pdo->prepare( "INSERT INTO $data_table_name (id, saved_data_id, package_name, package_version) VALUES (?, ?, ?, ?)" );
-    $stmt->execute( array( "", $last_insert_id, $pkg_name, $pkg_version ) );
+        $name_and_version = explode( " ", $line );
+        $pkg_name    = $name_and_version[0];
+        $pkg_version = $name_and_version[1];
+
+        $stmt = $pdo->prepare( "INSERT INTO $data_table_name (id, saved_data_id, package_name, package_version) VALUES (?, ?, ?, ?)" );
+        $stmt->execute( array( "", $last_insert_id, $pkg_name, $pkg_version ) );
+
+    }
+
+} else {
+
+    die( "Error: no destination found" );
 
 }
+
 
 # Update row
 $stmt = $pdo->prepare( "UPDATE saved_data SET successful = TRUE where id = ?" );
