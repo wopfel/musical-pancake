@@ -10,6 +10,7 @@ if ( $_SERVER["REQUEST_METHOD"] != "POST" ) { die( "Wrong request method!" ); }
 var_dump( $_GET );
 
 $guid = $_GET["guid"];
+$type = $_GET["type"];
 
 # Check GUID
 if ( ! $guid ) { die(); }
@@ -19,7 +20,26 @@ var_dump( $guid );
 
 # A list with tables (where the transmitted data is stored), references to field "type" in table "saved_data"
 # Don't change the order in this array :-)
-$data_tables_list = array( "installed_packages" );
+$data_tables_list = array( "installed_packages",
+                           "upgradable_packages",
+                         );
+
+# A list of types for the http call (example: .../transmit.php?...&type=installed-packages)
+# Has to be the same index as the $data_tables_list
+# Room for future enhancements, if the server stores the data to different tables (for example: installed-packages --> different tables for pacman and apt)
+$type_list = array( "installed-packages", 
+                    "upgradable-packages",
+                  );
+
+# Check type
+if ( ! $type ) { die( "Error: missing data type" ); }
+if ( ! in_array( $type, $type_list ) ) { die( "Error: invalid data type" ); }
+
+# Select appropriate table for storing data
+$type_id = array_search( $type, $type_list );
+if ( $type_id === FALSE ) { die( "Error: type id not found" ); }
+$data_table_name = $data_tables_list[ $type_id ];
+if ( ! $data_table_name ) { die( "Error: data table name not set" ); }
 
 # Establish database connection
 $pdo = newDatabaseConnection()  or  die();
@@ -52,8 +72,10 @@ if ( $content === FALSE ) { die(); }
 
 print $content;
 
-$table_id = array_search( "installed_packages", $data_tables_list );
+$table_id = array_search( $data_table_name, $data_tables_list );
 if ( $table_id === FALSE ) { die( "Table not found. Invalid name." ); }
+# So far, the type id and table id must be equal
+if ( $table_id != $type_id ) { die( "Error: table id / type id mismatch" ); }
 
 # Create row
 $stmt = $pdo->prepare( "INSERT INTO saved_data (id, systems_id, datetime, successful, type) VALUES (?, ?, CURRENT_TIMESTAMP, FALSE, ?)" );
@@ -76,7 +98,7 @@ foreach ( explode( "\n", $content ) as $line ) {
     $pkg_name    = $name_and_version[0];
     $pkg_version = $name_and_version[1];
 
-    $stmt = $pdo->prepare( "INSERT INTO installed_packages (id, saved_data_id, package_name, package_version) VALUES (?, ?, ?, ?)" );
+    $stmt = $pdo->prepare( "INSERT INTO $data_table_name (id, saved_data_id, package_name, package_version) VALUES (?, ?, ?, ?)" );
     $stmt->execute( array( "", $last_insert_id, $pkg_name, $pkg_version ) );
 
 }

@@ -59,7 +59,7 @@ Transfer data to the server (index.php):
 
     hostname | curl  -d @-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/register.php"
     curl  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/ping.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
-    pacman -Q | curl  -F inputfile=@-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://pinguin.lan:33443/transmit.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
+    pacman -Q | curl  -F inputfile=@-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/transmit.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500&type=installed-packages"
 
 Store the GUID returned from the register.php call and supply it to the ping.php and transmit.php call.
 
