@@ -62,16 +62,6 @@ $stmt->execute( array( $data['id'] ) );
 if ( $stmt->rowCount() != 1 ) { die(); }
 
 
-if ( ! isset( $_FILES[ "inputfile" ] ) ) { die(); }
-$filename = $_FILES[ "inputfile" ][ "tmp_name" ];
-if ( ! file_exists( $filename ) ) { die(); }
-
-$content = file_get_contents( $filename );
-
-if ( $content === FALSE ) { die(); }
-
-print $content;
-
 $table_id = array_search( $data_table_name, $data_tables_list );
 if ( $table_id === FALSE ) { die( "Table not found. Invalid name." ); }
 # So far, the type id and table id must be equal
@@ -83,6 +73,11 @@ $stmt->execute( array( "", $data['id'], $table_id ) );
 
 $last_insert_id = $pdo->lastInsertId();
 
+
+# Reading input file
+if ( ! isset( $_FILES[ "inputfile" ] ) ) { die(); }
+$filename = $_FILES[ "inputfile" ][ "tmp_name" ];
+if ( ! file_exists( $filename ) ) { die(); }
 
 $content = file_get_contents( $filename );
 
