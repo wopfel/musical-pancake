@@ -60,6 +60,7 @@ Transfer data to the server (index.php):
     hostname | curl  -d @-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/register.php"
     curl  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/ping.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500"
     pacman -Q | curl  -F inputfile=@-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/transmit.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500&type=installed-packages"
+    pacman -Qu | curl  -F inputfile=@-  --cacert certs/ca.crt  --cert certs/client-02.crt  --key certs/client-02.key  "https://localhost:33443/transmit.php?guid=9f8f2492-04a5-4622-b25b-9cea618de500&type=upgradable-packages"
 
 Store the GUID returned from the register.php call and supply it to the ping.php and transmit.php call.
 
@@ -79,6 +80,7 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - create a user ("musical-pancake", password "aEfV7I5n0tJfgCZ0")
 - create a table ("installed_packages") for storing pacman information
 - create a table ("saved_data") for grouping data in the installed_packages table
+- create a table ("upgradable_packages") for storing pacman information
 
 
 ## TODO
@@ -90,25 +92,26 @@ My steps in phpMyAdmin (see file database/db-dump.sql):
 - Add relationship keys/foreign keys in database (example: delete all appropriate rows when row in saved_data is deleted)
 
 
-## DATABASE LAYOUT
+## Database layout
 
-    systems                  saved_data              installed_packages
-    -------                  ----------              ------------------
-    id          <---+        id           <---+      id
-    guid            +----    systems_id       +----  saved_data_id
-    dn                       datetime                package_name
-    servername               successful              package_version
-    created                  type         ----+
-    last_contact                              !
+    systems                  saved_data                       installed_packages           upgradable_packages
+    -------                  ----------                       ------------------           -------------------
+    id          <---+        id           <---------+         id                           id
+    guid            +----    systems_id             +------   saved_data_id         +----  saved_data_id
+    dn                       datetime               !         package_name          !      package_name
+    servername               successful             !         package_version       !      package_version_old
+    created                  type         ----+     !                               !      package_version_new
+    last_contact                              !     +-------------------------------+
                                               !
                                               +-----> references to array $data_tables_list in transmit.php:
                                                       0 --> table installed_packages
+                                                      1 --> table upgradable_packages
 
 In the systems table, all systems (clients) are recorded. Each registering client gets a random GUID assigned.
 
-When data is transferred (so far: pacman's installed packages) a new record is created in the saved_data table. The field successful is initialized with false. The packages are added to the installed_packages table, referencing the saved_data's id. After the insert has been completed, the field successful is set to true.
+When data is transferred (so far: pacman's installed and upgradable packages) a new record is created in the saved_data table. The field successful is initialized with false. The packages are added to the installed_packages (or another) table, referencing the saved_data's id. After the insert has been completed, the field successful is set to true.
 
-At the moment, the records are added. There's no garbage collection.
+At the moment, the records are just added. There's no garbage collection.
 
 
 ## LICENSE

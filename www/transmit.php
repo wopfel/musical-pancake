@@ -103,6 +103,29 @@ if ( $type == "installed-packages" and $data_table_name == "installed_packages" 
 
     }
 
+} elseif ( $type == "upgradable-packages" and $data_table_name == "upgradable_packages" ) {
+
+    # Example data:
+    # nginx 1.10.2-2 -> 1.10.2-4
+    # perl 5.24.0-2 -> 5.24.1-1
+    # php 7.0.14-1 -> 7.1.1-1
+
+    foreach ( explode( "\n", $content ) as $line ) {
+
+        print ">>> $line \n";
+
+        $name_and_version = explode( " ", $line );
+        if ( $name_and_version[2] != "->" ) { continue; }
+
+        $pkg_name        = $name_and_version[0];
+        $pkg_version_old = $name_and_version[1];
+        $pkg_version_new = $name_and_version[3];
+
+        $stmt = $pdo->prepare( "INSERT INTO $data_table_name (id, saved_data_id, package_name, package_version_old, package_version_new) VALUES (?, ?, ?, ?, ?)" );
+        $stmt->execute( array( "", $last_insert_id, $pkg_name, $pkg_version_old, $pkg_version_new ) );
+
+    }
+
 } else {
 
     die( "Error: no destination found" );

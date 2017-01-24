@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 22. Jan 2017 um 01:11
+-- Erstellungszeit: 24. Jan 2017 um 17:27
 -- Server-Version: 10.1.20-MariaDB
 -- PHP-Version: 7.0.14
 
@@ -56,6 +56,20 @@ CREATE TABLE `systems` (
   `last_contact` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `upgradable_packages`
+--
+
+CREATE TABLE `upgradable_packages` (
+  `id` bigint(20) NOT NULL,
+  `saved_data_id` bigint(20) NOT NULL,
+  `package_name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `package_version_old` varchar(20) COLLATE utf8_bin NOT NULL,
+  `package_version_new` varchar(20) COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 --
 -- Indizes der exportierten Tabellen
 --
@@ -82,6 +96,13 @@ ALTER TABLE `systems`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `upgradable_packages`
+--
+ALTER TABLE `upgradable_packages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `systems_id` (`saved_data_id`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -89,14 +110,19 @@ ALTER TABLE `systems`
 -- AUTO_INCREMENT für Tabelle `installed_packages`
 --
 ALTER TABLE `installed_packages`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3865;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6463;
 --
 -- AUTO_INCREMENT für Tabelle `saved_data`
 --
 ALTER TABLE `saved_data`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT für Tabelle `systems`
 --
 ALTER TABLE `systems`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT für Tabelle `upgradable_packages`
+--
+ALTER TABLE `upgradable_packages`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
